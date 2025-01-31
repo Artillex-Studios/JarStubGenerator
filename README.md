@@ -19,3 +19,7 @@ Download the jar from the GitHub releases page, and run it with:
 
 `-s/-suffix` - the suffix of the generated jar
 
+`-keep-fields` - keep all the fields of classes
+
+`-f/-field-whitelist` - a list of field names separated by `;` e.g. `yourField;yourField2`
+

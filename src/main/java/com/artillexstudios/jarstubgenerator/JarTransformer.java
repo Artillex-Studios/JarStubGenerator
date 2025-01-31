@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -22,10 +24,14 @@ import java.util.stream.Stream;
 public final class JarTransformer {
     private final CommandLine commandLine;
     private final Path path;
+    private final boolean keepFields;
+    private final List<String> fieldNameWhitelist;
 
     public JarTransformer(CommandLine commandLine, Path path) {
         this.commandLine = commandLine;
         this.path = path;
+        this.keepFields = commandLine.hasOption("keep-fields");
+        this.fieldNameWhitelist = Arrays.stream(commandLine.getOptionValue("f").split(";")).toList();
     }
 
     public void run() {
@@ -112,7 +118,7 @@ public final class JarTransformer {
                 @Override
                 public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
                     boolean enumConstant = (access & Opcodes.ACC_ENUM) != 0;
-                    if (enumConstant) {
+                    if (JarTransformer.this.keepFields || enumConstant || JarTransformer.this.fieldNameWhitelist.contains(name)) {
                         return super.visitField(access, name, descriptor, signature, value);
                     }
 

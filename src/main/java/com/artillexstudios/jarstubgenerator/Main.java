@@ -22,6 +22,14 @@ public class Main {
                 .build()
         );
 
+        options.addOption(new Option("keep-fields", ""));
+
+        options.addOption(Option.builder("f")
+                .longOpt("field-whitelist")
+                .hasArg()
+                .build()
+        );
+
         options.addOption(Option.builder("o")
                 .longOpt("out")
                 .hasArg(true)
